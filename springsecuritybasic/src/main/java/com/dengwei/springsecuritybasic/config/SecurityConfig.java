@@ -46,19 +46,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin() //表单验证
     //              .loginPage("/login") //请求的controller
                     .loginPage("/login.html") //指定登录页面
-    //              .loginProcessingUrl("/login")
+                    .loginProcessingUrl("/login") //自定义表单登陆提交的action
     //              .successForwardUrl("/my/hello") //设置登录请求的url路径
     //              .defaultSuccessUrl("/my/hello")  //登陆成功跳转的路径
                     .successHandler(myAuthenticationSuccessHandler)  //添加登陆成功过滤器的处理
                     .failureHandler(myAuthenticationFailHandler)   //添加登陆失败过滤器的处理
                 .and()
-                 .rememberMe()   //添加记住我功能
+                   .rememberMe()   //添加记住我功能
                    .tokenRepository(persistentTokenRepository())
-                   .tokenValiditySeconds(3600) //token有效时间
+                   .tokenValiditySeconds(3600) //token有效时间（秒）
                    .userDetailsService(myUserDetailsService) //获取到用户名做登陆
                 .and()
                     .authorizeRequests()
-                    .antMatchers("/login.html", "/image/code").permitAll() //访问登录页面不做拦截（允许访问）
+                    .antMatchers("/login.html", "/image/code","/favicon.ico").permitAll() //访问登录页面不做拦截（允许访问）
                     .anyRequest()
                     .authenticated()
                 .and()
@@ -96,8 +96,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PersistentTokenRepository persistentTokenRepository(){
         JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
         jdbcTokenRepository.setDataSource(dataSource);
-        //启动时创建表
-        jdbcTokenRepository.setCreateTableOnStartup(true);
+        //启动时创建表(首次启动时需要)
+//        jdbcTokenRepository.setCreateTableOnStartup(true);
         return jdbcTokenRepository;
     }
 }

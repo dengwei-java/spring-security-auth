@@ -1,5 +1,6 @@
 package com.dengwei.springsecuritybasic.controller;
 
+import com.dengwei.springsecuritybasic.simple.SimpleMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -35,9 +36,16 @@ public class TestController {
     }
 
 
+    /**
+     * @Author
+     * @Description //TODO 当需要身份认证时，跳转到这里
+     * @Date 2019/6/30 23:23
+     * @Param  * @param null
+     * @return
+     */
     @RequestMapping("/myLogin")
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public void login (HttpServletRequest request , HttpServletResponse response) throws IOException {
+    public SimpleMessage login (HttpServletRequest request , HttpServletResponse response) throws IOException {
         //判断是后端处理登录跳转还是，返回json数据给前端，让前端收到消息后跳转
         SavedRequest savedRequest = requestCache.getRequest(request, response);
         if(null!=savedRequest){
@@ -46,6 +54,6 @@ public class TestController {
                 redirectStrategy.sendRedirect(request,response,"/login");
             }
         }
-//        return null;
+        return new SimpleMessage("当前用户需要身份认证");
     }
 }
