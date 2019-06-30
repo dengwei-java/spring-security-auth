@@ -1,7 +1,7 @@
 
 server:
   port: 9000
-  context-path: '/crm'
+  context-path: '/'
   connection-timeout: 600000
 
 mybatis:
@@ -16,15 +16,22 @@ spring:
       max-file-size: 100MB
       max-request-size: 1000MB
 
+#暂时关闭security的basic认证方式
+#security:
+#  basic:
+#   enabled:  false
+
+
 ---
 spring:
   profiles: dev
   datasource:
     druid:
-      driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://192.168.2.241:3306/crm-dev?useSSL=false&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
+#      driver-class-name: com.mysql.jdbc.Driver
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/dw-study?useSSL=false&serverTimezone=GMT&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
       username: root
-      password: **
+      password: 123456
       filters: stat
       maxActive: 20
       initialSize: 1
@@ -47,10 +54,10 @@ spring:
   profiles: test
   datasource:
     druid:
-      driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://192.168.2.241:3306/crm-test?useSSL=false&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
+     driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/dw-study?useSSL=false&serverTimezone=GMT&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
       username: root
-      password: **
+      password: 123456
       filters: stat
       maxActive: 20
       initialSize: 1
