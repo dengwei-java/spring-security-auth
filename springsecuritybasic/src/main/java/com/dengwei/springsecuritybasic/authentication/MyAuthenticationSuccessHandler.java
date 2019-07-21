@@ -23,7 +23,7 @@ import java.io.IOException;
  * @Date 2019/6/25 23:05
  * @Version 1.0
  */
-@Component("MyAuthenticationSuccessHandler")
+@Component
 public class MyAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     private Logger logger = LoggerFactory.getLogger(MyAuthenticationSuccessHandler.class);
     @Override

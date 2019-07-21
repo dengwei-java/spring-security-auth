@@ -2,8 +2,10 @@ package com.dengwei.springsecuritybasic.config;
 
 import com.dengwei.springsecuritybasic.authentication.MyAuthenticationFailHandler;
 import com.dengwei.springsecuritybasic.authentication.MyAuthenticationSuccessHandler;
-import com.dengwei.springsecuritybasic.filter.ValidateCodeFilter;
+import com.dengwei.springsecuritybasic.validateCode.image.ValidateCodeFilter;
 import com.dengwei.springsecuritybasic.service.MyUserDetailsService;
+import com.dengwei.springsecuritybasic.validateCode.shortMessage.mobile_anthenticaton.ShortMessageCodeFilter;
+import com.dengwei.springsecuritybasic.validateCode.shortMessage.mobile_anthenticaton.SsmCodeAuthenticationSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,17 +40,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private MyAuthenticationFailHandler myAuthenticationFailHandler;
     @Autowired
     private ValidateCodeFilter validateCodeFilter;
+    @Autowired
+    private ShortMessageCodeFilter shortMessageCodeFilter;
+    @Autowired
+    private SsmCodeAuthenticationSecurityConfig ssmCodeAuthenticationSecurityConfig;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 //        http.httpBasic() //basic 方式验证
         http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class) //添加验证码过滤器在用户名密码过滤器之前
+            .addFilterBefore(shortMessageCodeFilter,UsernamePasswordAuthenticationFilter.class)
                 .formLogin() //表单验证
     //              .loginPage("/login") //请求的controller
                     .loginPage("/login.html") //指定登录页面
                     .loginProcessingUrl("/login") //自定义表单登陆提交的action
-    //              .successForwardUrl("/my/hello") //设置登录请求的url路径
-    //              .defaultSuccessUrl("/my/hello")  //登陆成功跳转的路径
+//                    .loginProcessingUrl("/authentication/mobile") //自定义手机验证码表单登陆提交的action
+                    // 设置登陆成功页
+                    .defaultSuccessUrl("/").permitAll()
+                    // 登录失败Url
+                    .failureUrl("/login/error")
                     .successHandler(myAuthenticationSuccessHandler)  //添加登陆成功过滤器的处理
                     .failureHandler(myAuthenticationFailHandler)   //添加登陆失败过滤器的处理
                 .and()
@@ -58,12 +68,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                    .userDetailsService(myUserDetailsService) //获取到用户名做登陆
                 .and()
                     .authorizeRequests()
-                    .antMatchers("/login.html", "/image/code","/favicon.ico").permitAll() //访问登录页面不做拦截（允许访问）
+                    .antMatchers("/login.html","/authentication/mobile","/image/code","/mobile/code/*").permitAll() //访问登录页面不做拦截（允许访问）
                     .anyRequest()
                     .authenticated()
                 .and()
                     .csrf()
-                    .disable();
+                    .disable()
+                .apply(ssmCodeAuthenticationSecurityConfig); //应用自定义的短信验证配置
     }
 
 

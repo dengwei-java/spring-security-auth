@@ -1,9 +1,9 @@
-package com.dengwei.springsecuritybasic.filter;
+package com.dengwei.springsecuritybasic.validateCode.image;
 
 
 import com.dengwei.springsecuritybasic.authentication.MyAuthenticationFailHandler;
 import com.dengwei.springsecuritybasic.authenticationException.ValidateCodeException;
-import com.dengwei.springsecuritybasic.validateCode.ImageCode;
+import com.dengwei.springsecuritybasic.validateCode.image.ImageCode;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -70,7 +70,6 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
             throw new ValidateCodeException("验证码不存在");
         }
         if(imageCodeSession.isExpried()){
-            request.getSession().removeAttribute("imageCode");
             throw new ValidateCodeException("验证码已过期");
         }
         if(!StringUtils.equalsIgnoreCase(imageCodeSession.getCode(),imageCodeWeb)){

@@ -24,7 +24,7 @@ import java.io.IOException;
  * @Date 2019/6/25 23:18
  * @Version 1.0
  */
-@Component("MyAuthenticationFailHandler")
+@Component
 public class MyAuthenticationFailHandler extends SimpleUrlAuthenticationFailureHandler {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
